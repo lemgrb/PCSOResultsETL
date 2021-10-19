@@ -1,0 +1,2 @@
+# Start STRAPI
+killall node

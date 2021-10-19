@@ -165,7 +165,7 @@ public class SearchPage {
         // Save the data
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter("./data.csv"));
-            writer.write("game,result,datetime,jackpot,winners,latest\n");
+            writer.write("datetime,game,result,jackpot,winners,latest\n");
             for(Map<String,String> entry: table)
                 writer.write(entry.get("datetime") + "," + entry.get("game") + "," + entry.get("result") + "," +  entry.get("jackpot") + "," + entry.get("winners")+","+ entry.get("latest")+"\n");
             writer.close();
