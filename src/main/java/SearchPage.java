@@ -119,7 +119,7 @@ public class SearchPage {
         gameNameMap.put("EZ2 Lotto 9PM","12");
 
         // Must come first before transforming the game name because relies on raw value of game name containing "11AM", "4PM"
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
         for(Map<String,String> result: table) {
             LocalDate date = LocalDate.parse(result.get("datetime"), formatter);
             // Add 'featured' boolean value
