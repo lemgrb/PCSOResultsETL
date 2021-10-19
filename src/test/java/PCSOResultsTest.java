@@ -27,30 +27,41 @@ import java.util.Properties;
 public class PCSOResultsTest {
 
     private WebDriver driver;
-    private Properties properties = new Properties();
+
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMMM-yyyy");
     private LocalDate from;
     private LocalDate to;
 
     @BeforeClass
     public void setup() throws IOException {
-        FileReader reader = new FileReader("pcso.properties");
-        properties.load(reader);
-        from = LocalDate.parse(properties.getProperty("DRAW_DATE_FROM"), formatter);
-        to = LocalDate.parse(properties.getProperty("DRAW_DATE_TO"),formatter);
+
+        from = LocalDate.parse(PCSOProperties.getInstance().getPropertiesFile().getProperty("DRAW_DATE_FROM"), formatter);
+        to = LocalDate.parse(PCSOProperties.getInstance().getPropertiesFile().getProperty("DRAW_DATE_TO"),formatter);
     }
 
     @Test
-    public void openPCSOWebsite() throws ParseException {
+    public void searchByDate() throws ParseException, IOException {
         driver = new ChromeDriver();
-        driver.get(properties.getProperty("PCSO_RESULTS_URL"));
+        driver.get(PCSOProperties.getInstance().getPropertiesFile().getProperty("PCSO_RESULTS_URL"));
         driver.manage().window().maximize();
         SearchPage searchPage = new SearchPage(driver);
         searchPage.search(from, to);
-        Assert.assertTrue(searchPage.pageHasLoaded(), "Search results is displayed");
+        Assert.assertTrue(searchPage.isDataAvailable(), "Search results is displayed");
+    }
+
+    @Test(dependsOnMethods = {"searchByDate"})
+    public void copyValuesFromtableToCSV() throws IOException {
+        SearchPage searchPage = new SearchPage(driver);
+        searchPage.extract();
+        searchPage.transform();
     }
 
 
+    @Test(dependsOnMethods = {"copyValuesFromtableToCSV"})
+        public void saveToCSV() {
+            SearchPage searchPage = new SearchPage(driver);
+            searchPage.saveToCSV();
+    }
 
     @AfterClass
     public void cleanUp() {
