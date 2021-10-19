@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "9b4fe8df-39f8-483c-99e1-b4764fb9ffcc",
+		"name": "INSERT_GAME_RESULTS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Game Result",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const uuid = require('uuid');",
+							"",
+							"pm.globals.set(\"game\", data.game);",
+							"pm.globals.set(\"datetime\", data.datetime);",
+							"pm.globals.set(\"result\", data.result);",
+							"pm.globals.set(\"jackpot\", data.jackpot);",
+							"pm.globals.set(\"winners\", data.winners);",
+							"pm.globals.set(\"latest\", data.latest);",
+							"const list = pm.info.iterationCount;",
+							"console.log(list);",
+							"pm.globals.set(\"TOTAL_RECORDS\", list);",
+							"if(!pm.collectionVariables.get(\"jwt\")) {",
+							"    pm.sendRequest({",
+							"        url: \"http://localhost:1337/auth/local\",",
+							"        method: \"POST\",",
+							"        header: \"content-type:application/json\",",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({ identifier: \"strapi\", password: \"TestPass123\"})",
+							"        }",
+							"    },",
+							"    function (err, response) {",
+							"        pm.collectionVariables.set(\"jwt\", response.json().jwt);",
+							"    }",
+							"    );",
+							"    pm.collectionVariables.set(\"BATCH_ID\",uuid.v4());",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.globals.unset(\"game\");",
+							"pm.globals.unset(\"datetime\");",
+							"pm.globals.unset(\"result\");",
+							"pm.globals.unset(\"jackpot\");",
+							"pm.globals.unset(\"winners\");",
+							"pm.globals.unset(\"latest\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"game\": {{game}},\n    \"jackpot\": {{jackpot}},\n    \"result\": \"{{result}}\",\n    \"datetime\": \"{{datetime}}\",\n    \"winners\": {{winners}},\n    \"latest\": {{latest}},\n    \"batch_id\": \"{{BATCH_ID}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:1337/game-results",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "1337",
+					"path": [
+						"game-results"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt",
+			"value": ""
+		},
+		{
+			"key": "BATCH_ID",
+			"value": ""
+		}
+	]
+}

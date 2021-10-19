@@ -78,3 +78,10 @@ target/
 .idea/misc.xml
 .idea/runConfigurations.xml
 .idea/vcs.xml
+
+## test data
+testresults.json
+data.csv
+
+## 
+.env.local
