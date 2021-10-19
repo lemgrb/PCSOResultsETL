@@ -4,7 +4,7 @@ Extract results from https://pcso.gov.ph/
 ## Steps
 
 1. Launch browser and open https://www.pcso.gov.ph/SearchLottoResult.aspx
-2. Set Draw date FROM and TO
+2. Search by date range
 3. Copy values from table
 4. Transform values
 5. Save as CSV
